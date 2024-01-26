@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UsersService } from '../../services/users.service';
 import { User } from '../../interfaces/users';
+import { filter } from 'rxjs';
 
 @Component({
   templateUrl: './users-page.component.html',
@@ -20,7 +21,10 @@ export class UsersPageComponent implements OnInit{
   }
 
   loadPage(page:number){
-    this.userService.loadPage(page).subscribe(
+    this.currentPage = page;
+    this.userService.loadPage(page).pipe(
+      filter(users => users.length > 0)
+    ).subscribe(
       users => {
         console.log(users);
         this.users = users
